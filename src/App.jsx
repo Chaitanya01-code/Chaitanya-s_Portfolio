@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import portrait from './assets/cutout.png.png'
 import './App.css'
 
@@ -9,11 +9,28 @@ const starterProjects = [
   { title: 'Insight Engine', description: 'Turning messy datasets into clear, useful stories with a little statistical rigor.', tags: ['Data', 'Research'], link: 'https://github.com/' },
 ]
 
+const loadStored = (key, fallback) => {
+  try {
+    const stored = localStorage.getItem(key)
+    return stored ? JSON.parse(stored) : fallback
+  } catch {
+    return fallback
+  }
+}
+
 function App() {
-  const [skills, setSkills] = useState(starterSkills)
-  const [projects, setProjects] = useState(starterProjects)
+  const [skills, setSkills] = useState(() => loadStored('portfolio-skills', starterSkills))
+  const [projects, setProjects] = useState(() => loadStored('portfolio-projects', starterProjects))
   const [skillInput, setSkillInput] = useState('')
   const [projectInput, setProjectInput] = useState({ title: '', link: '' })
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-skills', JSON.stringify(skills))
+  }, [skills])
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-projects', JSON.stringify(projects))
+  }, [projects])
 
   const addSkill = (event) => {
     event.preventDefault()

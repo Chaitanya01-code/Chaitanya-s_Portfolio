@@ -12,10 +12,9 @@ import {
   FaLaptopCode,
   FaMoon,
   FaSun,
-  FaXTwitter,
   FaXmark,
 } from 'react-icons/fa6'
-import { FaAws, FaLinkedin } from 'react-icons/fa'
+import { FaAws, FaLinkedinIn } from 'react-icons/fa'
 import {
   SiCss,
   SiDocker,
@@ -32,16 +31,11 @@ import {
   SiTensorflow,
 } from 'react-icons/si'
 import portrait from './assets/cutout.png.png'
+import { links } from './data/links.js'
 import projects from './data/projects.js'
 import skillGroups from './data/skills.js'
 import './App.css'
 
-const email = 'chaitanyashirsath92@gmail.com'
-const socialLinks = {
-  github: '',
-  linkedin: '',
-  x: '',
-}
 const resumeUrl = ''
 
 const skillIcons = {
@@ -158,21 +152,18 @@ function App() {
             <a className="button button-primary" href="#projects">
               View My Work <FaArrowRight aria-hidden="true" />
             </a>
-            <a className="button button-outline" href={`mailto:${email}`}>
+            <a className="button button-outline" href={`mailto:${links.email}?subject=Hello%20Chaitanya`}>
               Contact Me <FaEnvelope aria-hidden="true" />
             </a>
           </div>
           <div className="social-links hero-social" aria-label="Social links">
-            <SocialLink href={socialLinks.github} label="GitHub">
+            <SocialLink href={links.github} label="GitHub">
               <FaGithub aria-hidden="true" />
             </SocialLink>
-            <SocialLink href={socialLinks.linkedin} label="LinkedIn">
-              <FaLinkedin aria-hidden="true" />
+            <SocialLink href={links.linkedin} label="LinkedIn">
+              <FaLinkedinIn aria-hidden="true" />
             </SocialLink>
-            <SocialLink href={socialLinks.x} label="X / Twitter">
-              <FaXTwitter aria-hidden="true" />
-            </SocialLink>
-            <a href={`mailto:${email}`} aria-label="Email" title="Email">
+            <a href={`mailto:${links.email}?subject=Hello%20Chaitanya`} aria-label="Email" title="Email">
               <FaEnvelope aria-hidden="true" />
             </a>
           </div>
@@ -303,13 +294,13 @@ function App() {
         <div className="footer-right">
           <p>Open to internships, collaborations, and conversations about the future of intelligent products.</p>
           <div className="contact-actions">
-            <a className="button button-primary" href={`mailto:${email}`}>
+            <a className="button button-primary" href={`mailto:${links.email}?subject=Hello%20Chaitanya`}>
               Email me <FaEnvelope aria-hidden="true" />
             </a>
-            <SocialLink href={socialLinks.github} label="Visit GitHub" className="button button-outline">
+            <SocialLink href={links.github} label="Visit GitHub" className="button button-outline">
               GitHub <FaArrowUpRightFromSquare aria-hidden="true" />
             </SocialLink>
-            <SocialLink href={socialLinks.linkedin} label="Visit LinkedIn" className="button button-outline">
+            <SocialLink href={links.linkedin} label="Visit LinkedIn" className="button button-outline">
               LinkedIn <FaArrowUpRightFromSquare aria-hidden="true" />
             </SocialLink>
           </div>

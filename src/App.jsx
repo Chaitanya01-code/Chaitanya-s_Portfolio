@@ -7,13 +7,14 @@ import {
   FaBriefcase,
   FaCloud,
   FaCode,
-  FaEnvelope,
+  FaDownload,
   FaGithub,
   FaLaptopCode,
   FaMoon,
   FaSun,
   FaXmark,
 } from 'react-icons/fa6'
+import { MdEmail } from 'react-icons/md'
 import {
   FaBrain as FaSkillBrain,
   FaDatabase,
@@ -45,11 +46,11 @@ import {
 import { VscCode } from 'react-icons/vsc'
 import portrait from './assets/cutout.png.png'
 import { links } from './data/links.js'
-import projects from './data/projects.js'
+import { projects } from './data/projects.js'
 import { skills } from './data/skills.js'
 import './App.css'
 
-const resumeUrl = ''
+const resumeUrl = '/Chaitanya_Resume.pdf'
 
 const skillIcons = {
   SiPython,
@@ -161,6 +162,9 @@ function App() {
           <a href="#skills" onClick={closeMenu}>Skills</a>
           <a href="#projects" onClick={closeMenu}>Projects</a>
           <a href="#contact" onClick={closeMenu}>Contact</a>
+          <a className="mobile-nav-cta" href={resumeUrl} download onClick={closeMenu}>
+            Download CV <FaDownload aria-hidden="true" />
+          </a>
         </div>
         <div className="nav-actions">
           <button
@@ -171,11 +175,9 @@ function App() {
           >
             {isDark ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
           </button>
-          {resumeUrl && (
-            <a className="nav-cta" href={resumeUrl} target="_blank" rel="noopener noreferrer">
-              Download CV <span aria-hidden="true">↓</span>
-            </a>
-          )}
+          <a className="nav-cta" href={resumeUrl} download>
+            Download CV <FaDownload aria-hidden="true" />
+          </a>
         </div>
       </nav>
 
@@ -195,8 +197,8 @@ function App() {
             <a className="button button-primary" href="#projects">
               View My Work <FaArrowRight aria-hidden="true" />
             </a>
-            <a className="button button-outline" href={`mailto:${links.email}?subject=Hello%20Chaitanya`}>
-              Contact Me <FaEnvelope aria-hidden="true" />
+            <a className="button button-outline" href={`mailto:${links.email}`}>
+              Contact Me <MdEmail aria-hidden="true" />
             </a>
           </div>
           <div className="social-links hero-social" aria-label="Social links">
@@ -206,8 +208,8 @@ function App() {
             <SocialLink href={links.linkedin} label="LinkedIn">
               <FaLinkedinIn aria-hidden="true" />
             </SocialLink>
-            <a href={`mailto:${links.email}?subject=Hello%20Chaitanya`} aria-label="Email" title="Email">
-              <FaEnvelope aria-hidden="true" />
+            <a href={`mailto:${links.email}`} aria-label="Email" title="Email">
+              <MdEmail aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -243,13 +245,12 @@ function App() {
         </div>
         <div className="about-content">
           <p>
-            I&apos;m a Computer Science Engineering student who enjoys turning complex
-            ideas into useful products. I&apos;m building a strong foundation across
-            machine learning and frontend engineering, and I&apos;m open to internship
-            opportunities where I can contribute and keep learning.
+            I&apos;m a Computer Science Engineering student who builds AI-powered products,
+            from RAG systems and agent platforms to full-stack apps. I&apos;m open to
+            internship opportunities where I can contribute and keep learning.
           </p>
           <div className="about-facts" aria-label="A few key facts">
-            <div><strong>4+</strong><span>AI projects built</span></div>
+            <div><strong>4</strong><span>AI projects</span></div>
             <div><strong>Open</strong><span>To internships</span></div>
             <div><strong>AI + Web</strong><span>Main stack focus</span></div>
           </div>
@@ -298,31 +299,38 @@ function App() {
           {projects.map((project, index) => (
             <article className="project-card" key={project.title}>
               <div className="project-preview">
-                {project.image ? (
-                  <img src={project.image} alt={`${project.title} project preview`} loading="lazy" />
-                ) : (
-                  <div className="preview-placeholder" aria-label="Project image placeholder">
-                    <FaCode aria-hidden="true" />
-                    <span>PROJECT PREVIEW</span>
-                  </div>
+                <div className="preview-placeholder" aria-hidden="true">
+                  <FaCode />
+                  <span>PROJECT PREVIEW</span>
+                </div>
+                {project.image && (
+                  <img
+                    src={project.image}
+                    alt={`${project.title} project preview`}
+                    loading="lazy"
+                    onError={(event) => { event.currentTarget.hidden = true }}
+                  />
                 )}
                 <span className="project-index">{String(index + 1).padStart(2, '0')}</span>
+                {project.status && <span className="project-status">{project.status}</span>}
               </div>
               <div className="project-content">
                 <h3>{project.title}</h3>
                 <p className="project-problem">{project.problem}</p>
-                <p className="project-result">{project.result}</p>
+                {project.result && !project.result.includes('TODO') && (
+                  <p className="project-result">{project.result}</p>
+                )}
                 <div className="tag-row" aria-label="Technologies">
                   {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
                 </div>
               </div>
               <div className="project-actions">
-                {project.demoUrl && (
+                {project.demoUrl && !project.demoUrl.includes('TODO') && (
                   <a className="button button-primary" href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                     Live Demo <FaArrowUpRightFromSquare aria-hidden="true" />
                   </a>
                 )}
-                {project.repoUrl && (
+                {project.repoUrl && !project.repoUrl.includes('TODO') && (
                   <a className="button button-outline" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
                     GitHub <FaGithub aria-hidden="true" />
                   </a>
@@ -341,8 +349,8 @@ function App() {
         <div className="footer-right">
           <p>Open to internships, collaborations, and conversations about the future of intelligent products.</p>
           <div className="contact-actions">
-            <a className="button button-primary" href={`mailto:${links.email}?subject=Hello%20Chaitanya`}>
-              Email me <FaEnvelope aria-hidden="true" />
+            <a className="button button-primary" href={`mailto:${links.email}`}>
+              Email me <MdEmail aria-hidden="true" />
             </a>
             <SocialLink href={links.github} label="Visit GitHub" className="button button-outline">
               GitHub <FaArrowUpRightFromSquare aria-hidden="true" />
@@ -350,6 +358,9 @@ function App() {
             <SocialLink href={links.linkedin} label="Visit LinkedIn" className="button button-outline">
               LinkedIn <FaArrowUpRightFromSquare aria-hidden="true" />
             </SocialLink>
+            <a className="button button-outline" href={resumeUrl} download>
+              Download CV <FaDownload aria-hidden="true" />
+            </a>
           </div>
         </div>
       </footer>

@@ -457,6 +457,14 @@ main[data-theme='dark'] {
   margin-top: 10px;
 }
 
+.section.skills-section {
+  padding: 43px 0;
+}
+
+.skills-section .section-heading {
+  margin-bottom: 24px;
+}
+
 .view-all {
   display: inline-flex;
   min-height: 44px;
@@ -470,28 +478,43 @@ main[data-theme='dark'] {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
 .skill-group {
-  min-height: 150px;
-  padding: 21px;
+  min-width: 0;
+  padding: 20px;
   border: 1px solid var(--line);
   border-radius: 5px;
   background: color-mix(in srgb, var(--paper) 76%, var(--soft-paper));
-  transition: border-color .2s, transform .2s;
+  opacity: 0;
 }
 
-.skill-group:hover {
-  border-color: var(--coral);
-  transform: translateY(-2px);
+.skill-group.is-visible {
+  animation: skill-card-fade-in .45s ease-out both;
+  animation-delay: calc(var(--skill-index) * 80ms);
+}
+
+.skill-group-learning {
+  border-style: dashed;
 }
 
 .skill-group h3 {
   margin: 0 0 16px;
   color: var(--ink);
-  font: 15px/1.4 var(--mono);
+  font: 13px/1.5 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.skill-group-learning h3 {
+  color: var(--coral);
+}
+
+@keyframes skill-card-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .skill-chips {
@@ -505,6 +528,7 @@ main[data-theme='dark'] {
 
 .skill-chip {
   display: inline-flex;
+  max-width: 100%;
   min-height: 38px;
   align-items: center;
   gap: 8px;
@@ -513,7 +537,19 @@ main[data-theme='dark'] {
   border: 1px solid var(--line);
   border-radius: 4px;
   background: var(--paper);
-  font-size: 14px;
+  font-size: 15px;
+  transition: transform .2s, color .2s, border-color .2s;
+}
+
+.skill-chip:hover {
+  color: var(--ink);
+  border-color: var(--lime);
+  transform: translateY(-2px);
+}
+
+.skill-chip span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .skill-chip svg {
@@ -871,11 +907,11 @@ main[data-theme='dark'] {
   }
 
   .skills-grid {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .skill-group {
-    min-height: 140px;
     padding: 16px;
   }
 
@@ -959,14 +995,6 @@ main[data-theme='dark'] {
 
   .about-facts div:last-child {
     grid-column: 1 / -1;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .skill-group {
-    min-height: 0;
   }
 
   .footer-bottom {

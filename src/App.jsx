@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   FaArrowRight,
   FaArrowUpRightFromSquare,
@@ -14,49 +14,68 @@ import {
   FaSun,
   FaXmark,
 } from 'react-icons/fa6'
-import { FaAws, FaLinkedinIn } from 'react-icons/fa'
 import {
-  SiCss,
+  FaBrain as FaSkillBrain,
+  FaDatabase,
+  FaMicrophone,
+  FaProjectDiagram,
+  FaRobot,
+  FaServer,
+  FaLinkedinIn,
+} from 'react-icons/fa'
+import {
   SiDocker,
   SiFastapi,
   SiGit,
   SiGithubactions,
-  SiHtml5,
+  SiGooglegemini,
   SiJavascript,
-  SiNodedotjs,
+  SiKubernetes,
+  SiLinux,
   SiPostgresql,
   SiPython,
-  SiPytorch,
+  SiRedis,
   SiReact,
-  SiTensorflow,
+  SiSqlalchemy,
+  SiTailwindcss,
+  SiTerraform,
+  SiTypescript,
+  SiVite,
 } from 'react-icons/si'
+import { VscCode } from 'react-icons/vsc'
 import portrait from './assets/cutout.png.png'
 import { links } from './data/links.js'
 import projects from './data/projects.js'
-import skillGroups from './data/skills.js'
+import { skills } from './data/skills.js'
 import './App.css'
 
 const resumeUrl = ''
 
 const skillIcons = {
-  Python: SiPython,
-  JavaScript: SiJavascript,
-  SQL: SiPostgresql,
-  'Machine Learning': FaBrain,
-  PyTorch: SiPytorch,
-  TensorFlow: SiTensorflow,
-  React: SiReact,
-  HTML: SiHtml5,
-  CSS: SiCss,
-  FastAPI: SiFastapi,
-  PostgreSQL: SiPostgresql,
-  'Node.js': SiNodedotjs,
-  Docker: SiDocker,
-  AWS: FaAws,
-  'GitHub Actions': SiGithubactions,
-  Git: SiGit,
-  GitHub: FaGithub,
-  'VS Code': FaCode,
+  SiPython,
+  SiJavascript,
+  FaDatabase,
+  FaBrain: FaSkillBrain,
+  FaProjectDiagram,
+  FaRobot,
+  SiGooglegemini,
+  FaMicrophone,
+  SiFastapi,
+  FaServer,
+  SiReact,
+  SiVite,
+  SiTailwindcss,
+  SiPostgresql,
+  SiSqlalchemy,
+  SiDocker,
+  SiGit,
+  SiGithubactions,
+  SiLinux,
+  VscCode,
+  SiRedis,
+  SiKubernetes,
+  SiTerraform,
+  SiTypescript,
 }
 
 function SocialLink({ href, label, children, className = '' }) {
@@ -88,10 +107,34 @@ function SocialLink({ href, label, children, className = '' }) {
 }
 
 function App() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
+  const skillsSectionRef = useRef(null)
 
   const closeMenu = () => setMenuOpen(false)
+
+  useEffect(() => {
+    const section = skillsSectionRef.current
+    if (!section) return
+
+    const cards = section.querySelectorAll('.skill-group')
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach((card) => card.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.12 })
+
+    cards.forEach((card) => observer.observe(card))
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <main data-theme={isDark ? 'dark' : 'light'}>
@@ -213,7 +256,7 @@ function App() {
         </div>
       </section>
 
-      <section className="section container" id="skills" aria-labelledby="skills-title">
+      <section className="section skills-section container" id="skills" aria-labelledby="skills-title" ref={skillsSectionRef}>
         <div className="section-heading">
           <div>
             <div className="section-label">02 / SKILLS</div>
@@ -221,16 +264,20 @@ function App() {
           </div>
         </div>
         <div className="skills-grid">
-          {skillGroups.map((group) => (
-            <article className="skill-group" key={group.title}>
-              <h3>{group.title}</h3>
+          {skills.map((group, index) => (
+            <article
+              className={`skill-group${group.group === 'Currently Learning' ? ' skill-group-learning' : ''}`}
+              key={group.group}
+              style={{ '--skill-index': index }}
+            >
+              <h3>{group.group}</h3>
               <ul className="skill-chips">
-                {group.skills.map((skill) => {
-                  const Icon = skillIcons[skill] || FaCode
+                {group.items.map((skill) => {
+                  const Icon = skillIcons[skill.icon] || FaCode
                   return (
-                    <li className="skill-chip" key={skill}>
+                    <li className="skill-chip" key={skill.name}>
                       <Icon aria-hidden="true" />
-                      <span>{skill}</span>
+                      <span>{skill.name}</span>
                     </li>
                   )
                 })}
